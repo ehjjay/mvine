@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mediavine Websites 2024</title>
+    <style>
+        /* General styles for body */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f1f3f5;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        h1 {
+            text-align: center;
+            color: #444;
+            font-size: 2.3rem;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        /* Input search box styles */
+        #searchInput {
+            display: block;
+            margin: 0 auto 20px;
+            padding: 12px 15px;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 20px;
+            border: 1px solid #ced4da;
+            font-size: 0.9rem;
+            background-color: #fff;
+            color: #495057;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+        }
+
+        #searchInput:focus {
+            border-color: #51a7f9;
+            background-color: #f1f9ff;
+            outline: none;
+        }
+
+        /* Table styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 10px 15px;
+            text-align: left;
+            font-size: 0.85rem;
+            color: #444;
+        }
+
+        th {
+            background-color: #51a7f9;
+            color: white;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        td {
+            border-bottom: 1px solid #ebebeb;
+            color: #555;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #e6f7ff;
+            cursor: pointer;
+        }
+
+        /* Loading text */
+        #loading {
+            text-align: center;
+            font-size: 1.4rem;
+            color: #444;
+            margin-top: 30px;
+        }
+
+        /* Hyperlink styles */
+        a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease-in-out;
+        }
+
+        a:hover {
+            color: #1d70b8;
+        }
+
+        /* Hide the seller_id column */
+        td:nth-child(2), th:nth-child(2) {
+            display: none;
+        }
+
+        /* Click column styles */
+        .click-column {
+            color: #3498db;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .click-column:hover {
+            color: #1d70b8;
+        }
+
+        /* Responsive table - handles mobile view */
+        @media (max-width: 768px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            th, td {
+                padding: 10px;
+                display: flex;
+                justify-content: space-between;
+                font-size: 0.8rem;
+            }
+
+            tr {
+                margin-bottom: 10px;
+                border-radius: 10px;
+                background-color: white;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            }
+
+            td:before {
+                content: attr(data-label);
+                font-weight: bold;
+                color: #333;
+                flex-basis: 50%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Mediavine Websites 2024</h1>
+
+    <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search websites...">
+
+    <div id="loading">Loading...</div> <!-- Loading text -->
+
+    <table id="sellersTable" style="display: none;">
+        <thead>
+            <tr>
+                <th>S/No</th>
+                <th>Seller ID</th>
+                <th>Name</th>
+                <th>Domain</th>
+                <th>Links</th>
+                <th>AHREF</th>
+                <th>Action</th> <!-- New column for click/arrow -->
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be dynamically loaded here -->
+        </tbody>
+    </table>
+
+    <script>
+        // Function to fetch data from the sellers.json file and populate the table
+        async function loadSellersData() {
+            try {
+                const response = await fetch('sellers.json');
+                const data = await response.json();
+                const sellers = data.sellers;
+                const tableBody = document.querySelector('#sellersTable tbody');
+                
+                // Clear any existing rows
+                tableBody.innerHTML = '';
+
+                // Loop through sellers and create table rows with serial numbers
+                sellers.forEach((seller, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td data-label="S/No">${index + 1}</td>
+                        <td data-label="Seller ID">${seller.seller_id}</td>
+                        <td data-label="Name">${seller.name}</td>
+                        <td data-label="Domain">
+                            <a href="https://${seller.domain}" target="_blank">${seller.domain}</a>
+                        </td>
+                        <td data-label="Links">
+                            <a href="https://${seller.domain}/sitemap.xml" target="_blank">XML</a>,  
+                            <a href="https://whois.domaintools.com/${seller.domain}" target="_blank">WHOIS</a>, 
+                            <a href="https://amazingalgorithms.com/domain-age-checker?domain=${seller.domain}" target="_blank">Age</a>
+                        </td>
+                        <td data-label="AHREF">
+                            <a href="https://ahrefs.com/backlink-checker/?input=www.${seller.domain}&mode=subdomains" target="_blank">BL</a>, 
+                            <a href="https://ahrefs.com/traffic-checker/?input=https%3A%2F%2F${seller.domain}%2F&mode=subdomains" target="_blank">TR</a>
+                        </td>
+                        <td data-label="Action" class="click-column">
+                            <a href="#" onclick="openLinks(event)">Click</a> <!-- Click link triggers the function -->
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+
+                // Hide loading text and display table once data is loaded
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('sellersTable').style.display = 'table';
+            } catch (error) {
+                console.error('Error loading sellers data:', error);
+            }
+        }
+
+        // Function to open all links in the same row
+        function openLinks(event) {
+            event.preventDefault();
+            const row = event.target.closest('tr'); // Get the clicked row
+
+            // Get all the anchor tags in the row
+            const links = row.querySelectorAll('a');
+            
+            // Open each link in a new tab
+            links.forEach(link => {
+                if (link.getAttribute('href') !== '#') {
+                    window.open(link.href, '_blank');
+                }
+            });
+        }
+
+        // Function to filter the table based on the search input
+        function searchTable() {
+            var input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toLowerCase();
+            table = document.getElementById("sellersTable");
+            tr = table.getElementsByTagName("tr");
+
+            // Loop through all table rows, and hide those who don't match the search query
+            for (i = 1; i < tr.length; i++) {
+                tr[i].style.display = "none"; // Initially hide the row
+                td = tr[i].getElementsByTagName("td");
+                for (j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                            tr[i].style.display = ""; // Show the row if a match is found
+                            break; // Stop searching through other cells in this row
+                        }
+                    }
+                }
+            }
+        }
+
+        // Load data when the page is loaded
+        window.onload = loadSellersData;
+    </script>
+
+</body>
+</html>
